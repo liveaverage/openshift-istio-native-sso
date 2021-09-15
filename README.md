@@ -25,8 +25,22 @@ PROJECT_SMCP=alpha-smcp
 ```
 
 2. Many of the manifest templates have references to variables, so let's swap these out and generate standard yaml manifests:
-```
+```bash
 ### FIXME - envsubst
+
+### Configure oauth2-proxy client details in configmap
+oc apply -f - <<EOF
+apiVersion: v1
+data:
+  OAUTH2_PROXY_CLIENT_ID: ${OAUTH2_PROXY_CLIENT_ID}
+  OAUTH2_PROXY_CLIENT_SECRET: ${OAUTH2_PROXY_CLIENT_SECRET}
+  OAUTH2_PROXY_COOKIE_SECRET: ${OAUTH2_PROXY_COOKIE_SECRET}
+kind: Secret
+metadata:
+  name: oauth2-proxy
+type: Opaque
+EOF
+
 ```
 
 ## Notes & To-Do
