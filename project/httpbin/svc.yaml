@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin
+spec:
+  ports:
+  - name: http-8888
+    port: 8888
+    protocol: TCP
+    targetPort: 8888
+  selector:
+    deployment: httpbin
+  sessionAffinity: None
+  type: ClusterIP

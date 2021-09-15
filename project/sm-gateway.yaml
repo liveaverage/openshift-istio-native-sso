@@ -1,0 +1,25 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: httpbin
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - httpbin.apps.vmx.int.shifti.us
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+    tls:
+      httpsRedirect: true
+  - hosts:
+    - httpbin.apps.vmx.int.shifti.us
+    port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    tls:
+      credentialName: secret-cert
+      mode: ISTIO_MUTUAL
