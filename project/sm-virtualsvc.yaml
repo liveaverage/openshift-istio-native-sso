@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: vs-httpbin
+spec:
+  gateways:
+  - httpbin
+  hosts:
+  - httpbin
+  - httpbin.apps.vmx.int.shifti.us
+  http:
+  - route:
+    - destination:
+        host: httpbin

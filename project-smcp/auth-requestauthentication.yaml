@@ -1,0 +1,12 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: authn-istio-ingressgateway
+spec:
+  jwtRules:
+  - forwardOriginalToken: true
+    issuer: http://gitlab.int.shifti.us
+    jwksUri: https://gitlab.int.shifti.us/oauth/discovery/keys
+  selector:
+    matchLabels:
+      app: istio-ingressgateway
