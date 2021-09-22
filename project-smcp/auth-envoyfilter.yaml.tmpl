@@ -68,9 +68,9 @@ spec:
                 - prefix: x-forwarded
                 - prefix: x-auth-request
             server_uri:
-              cluster: outbound|4180||oauth2-proxy.alpha-httpbin.svc.cluster.local
+              cluster: outbound|4180||oauth2-proxy.${PROJECT_APPS}.svc.cluster.local
               timeout: 10s
-              uri: http://oauth2-proxy.alpha-httpbin.svc.cluster.local:4180
+              uri: http://oauth2-proxy.${PROJECT_APPS}.svc.cluster.local:4180
   workloadSelector:
     labels:
       app: istio-ingressgateway

@@ -5,8 +5,8 @@ metadata:
 spec:
   jwtRules:
   - forwardOriginalToken: true
-    issuer: http://gitlab.int.shifti.us
-    jwksUri: https://gitlab.int.shifti.us/oauth/discovery/keys
+    issuer: ${OIDC_ISSUER_URL}
+    jwksUri: ${OIDC_JWKS_URI}
   selector:
     matchLabels:
       app: istio-ingressgateway

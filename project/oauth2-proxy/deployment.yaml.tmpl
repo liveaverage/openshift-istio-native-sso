@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - args:
-        - --provider=gitlab
+        - --provider=oidc
         - --ssl-insecure-skip-verify=true
         - --auth-logging=true
         - --cookie-secure=true
@@ -40,10 +40,12 @@ spec:
         - --pass-authorization-header=true
         - --set-xauthrequest=true
         - --pass-access-token=true
-        - --login-url=https://gitlab.int.shifti.us/oauth/authorize
-        - --redeem-url=https://gitlab.int.shifti.us/oauth/token
-        - --oidc-issuer-url=http://gitlab.int.shifti.us
-        - --oidc-jwks-url=https://gitlab.int.shifti.us/oauth/discovery/keys
+        - --login-url=${OIDC_AUTH_ENDPOINT}
+        - --redeem-url=${OIDC_TOKEN_ENDPOINT}
+        - --profile-url=${OIDC_PROFILE_URL}
+        - --oidc-groups-claim=groups
+        - --oidc-issuer-url=${OIDC_ISSUER_URL}
+        - --oidc-jwks-url=${OIDC_JWKS_URI}
         - --show-debug-on-error=true
         env:
         - name: OAUTH2_PROXY_CLIENT_ID

@@ -7,7 +7,7 @@ spec:
     istio: ingressgateway
   servers:
   - hosts:
-    - httpbin.apps.vmx.int.shifti.us
+    - ${APP_HOSTNAME}
     port:
       name: http
       number: 80
@@ -15,7 +15,7 @@ spec:
     tls:
       httpsRedirect: true
   - hosts:
-    - httpbin.apps.vmx.int.shifti.us
+    - ${APP_HOSTNAME}
     port:
       name: https
       number: 443
