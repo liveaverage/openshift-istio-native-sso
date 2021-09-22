@@ -58,13 +58,13 @@ EOF
 
 3. Apply the generated manifests to appropriate projects/namespaces:
 ```bash
-oc apply -f project/httpbin/*.yaml -n ${PROJECT_APPS}
-oc apply -f project/oauth2-proxy/*.yaml -n ${PROJECT_APPS}
-oc apply -f project/*.yaml -n ${PROJECT_APPS}
-oc apply -f tmp/project/*.yaml -n ${PROJECT_APPS}
+oc apply -f project/httpbin/ -n ${PROJECT_APPS}
+oc apply -f project/oauth2-proxy/ -n ${PROJECT_APPS}
+oc apply -f project/ -n ${PROJECT_APPS}
+oc apply -f tmp/project/ -n ${PROJECT_APPS}
 
-oc apply -f project-smcp/*.yaml -n ${PROJECT_SMCP}
-oc apply -f tmp/project-smcp/*.yaml -n ${PROJECT_SMCP}
+oc apply -f project-smcp/ -n ${PROJECT_SMCP}
+oc apply -f tmp/project-smcp/ -n ${PROJECT_SMCP}
 ```
 
 ## Notes & To-Do
