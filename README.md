@@ -6,7 +6,7 @@ Solution to configure authn/authz on OpenShift 4 using OpenShift Service Mesh v2
 ## Configuration
 
 1. Configure variables
-```
+```bash
 
 export OIDC_DISCOVERY_URL=https://gitlab.int.shifti.us/.well-known/openid-configuration
 export OIDC_DISCOVERY_URL_RESPONSE=$(curl -k $OIDC_DISCOVERY_URL)
@@ -16,6 +16,7 @@ export OIDC_PROFILE_URL=$(echo $OIDC_DISCOVERY_URL_RESPONSE | jq -r .userinfo_en
 export OIDC_TOKEN_ENDPOINT=$(echo $OIDC_DISCOVERY_URL_RESPONSE | jq -r .token_endpoint)
 export OIDC_AUTH_ENDPOINT=$(echo $OIDC_DISCOVERY_URL_RESPONSE | jq -r .authorization_endpoint)
 
+# This should by provided/configured via IdP
 export OAUTH2_PROXY_CLIENT_ID=""
 export OAUTH2_PROXY_CLIENT_SECRET=""
 export AUTH2_PROXY_COOKIE_SECRET=$(openssl rand -hex 16)
@@ -27,19 +28,23 @@ export PROJECT_SMCP=alpha-smcp
 
 ```
 
-2. Many of the manifest templates have references to variables, so let's swap these out and generate standard yaml manifests:
+2. Many of the manifest templates have references to variables, so let's swap these out and generate standard yaml manifests which will be availble for review at `tmp/`:
 ```bash
+
 git clone https://github.com/liveaverage/openshift-istio-native-sso.git
 cd openshift-istio-native
 mkdir -p tmp/project tmp/project-smcp
+
+# App Project templates
 envsubst < project/sm-virtualsvc.yaml.tmpl > tmp/project/sm-virtualsvc.yaml
 envsubst < project/sm-gateway.yaml.tmpl > tmp/project/sm-gateway.yaml
 
+# SMCP Project templates
 envsubst < project-smcp/auth-requestauthentication.yaml.tmpl > tmp/project-smcp/auth-requestauthentication.yaml
 envsubst < project-smcp/auth-envoyfilter.yaml.tmpl > tmp/project-smcp/auth-envoyfilter.yaml
 
 ```
-
+Create the oauth2-proxy secret based on IdP client_id + secret + cookie secret:
 ```bash
 ### Configure oauth2-proxy client details in configmap
 oc apply -f - <<EOF
@@ -53,7 +58,11 @@ metadata:
   name: oauth2-proxy
 type: Opaque
 EOF
+```
 
+Create a secret containing your certificate to be used by the envoy Gateway -- note the name `secret-cert` here, which is already referenced in the gateway manifest. If this doesn't match your cert secret you need to update the manifest:
+```bash
+oc create secret tls secret-cert --cert=/home/liveaverage/.acme.sh/api.vmx.int.shifti.us/fullchain.cer --key=/home/liveaverage/.acme.sh/api.vmx.int.shifti.us/api.vmx.int.shifti.us.key -n ${PROJECT_SMCP}
 ```
 
 3. Apply the generated manifests to appropriate projects/namespaces:
@@ -69,7 +78,6 @@ oc apply -f tmp/project-smcp/ -n ${PROJECT_SMCP}
 
 ## Notes & To-Do
 
-- Add `envsubst` commands to populate manifest templates with current environment variables
 - This example uses the generic `oidc` provider vs. `gitlab`, which requires a couple of extra args being provided to the oauth2-proxy container:
 
 ```bash
