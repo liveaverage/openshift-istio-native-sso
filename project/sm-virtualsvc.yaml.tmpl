@@ -12,3 +12,15 @@ spec:
   - route:
     - destination:
         host: httpbin
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: vs-oauth2-proxy
+spec:
+  hosts:
+  - oauth2
+  http:
+  - route:
+    - destination:
+        host: oauth2
