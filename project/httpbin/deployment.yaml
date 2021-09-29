@@ -17,6 +17,7 @@ spec:
         deployment: httpbin
       annotations:
         sidecar.istio.io/inject: 'true'
+        sidecar.istio.io/rewriteAppHTTPProbers: 'true'
         version: v1alpha
     spec:
       containers:
@@ -30,6 +31,16 @@ spec:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /anything
+              port: 8888
+              httpHeaders: 
+              - name: Custom-Header
+                value: booya
+              initialDelaySeconds: 10
+              periodSeconds: 5
+
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
