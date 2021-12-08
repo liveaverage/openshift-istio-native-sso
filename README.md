@@ -19,9 +19,9 @@ export OIDC_AUTH_ENDPOINT=$(echo $OIDC_DISCOVERY_URL_RESPONSE | jq -r .authoriza
 # This should by provided/configured via IdP
 export OAUTH2_PROXY_CLIENT_ID=""
 export OAUTH2_PROXY_CLIENT_SECRET=""
-export AUTH2_PROXY_COOKIE_SECRET=$(openssl rand -hex 16)
+export OAUTH2_PROXY_COOKIE_SECRET=$(openssl rand -hex 16)
 
-export APP_HOSTNAME=httpbin.apps.vmx.int.shifti.us
+export APP_HOSTNAME=httpbin.apps.dsc.int.shifti.us
 
 export PROJECT_APPS=alpha-httpbin
 export PROJECT_SMCP=alpha-smcp
@@ -48,15 +48,21 @@ Create the oauth2-proxy secret based on IdP client_id + secret + cookie secret:
 ```bash
 ### Configure oauth2-proxy client details in configmap
 oc apply -f - <<EOF
-apiVersion: v1
-data:
+stringData:
   OAUTH2_PROXY_CLIENT_ID: ${OAUTH2_PROXY_CLIENT_ID}
   OAUTH2_PROXY_CLIENT_SECRET: ${OAUTH2_PROXY_CLIENT_SECRET}
   OAUTH2_PROXY_COOKIE_SECRET: ${OAUTH2_PROXY_COOKIE_SECRET}
+  OIDC_DISCOVERY_URL: ${OIDC_DISCOVERY_URL}
+  OIDC_ISSUER_URL: ${OIDC_ISSUER_URL}
+  OIDC_JWKS_URI: ${OIDC_JWKS_URI}
+  OIDC_PROFILE_URL: ${OIDC_PROFILE_URL}
+  OIDC_TOKEN_ENDPOINT: ${OIDC_TOKEN_ENDPOINT}
+  OIDC_AUTH_ENDPOINT: ${OIDC_AUTH_ENDPOINT}
 kind: Secret
 metadata:
   name: oauth2-proxy
 type: Opaque
+apiVersion: v1
 EOF
 ```
 

@@ -40,13 +40,13 @@ spec:
         - --pass-authorization-header=true
         - --set-xauthrequest=true
         - --pass-access-token=true
-        - --login-url=${OIDC_AUTH_ENDPOINT}
-        - --redeem-url=${OIDC_TOKEN_ENDPOINT}
-        - --profile-url=${OIDC_PROFILE_URL}
         - --oidc-groups-claim=groups
-        - --oidc-issuer-url=${OIDC_ISSUER_URL}
-        - --oidc-jwks-url=${OIDC_JWKS_URI}
         - --show-debug-on-error=true
+        # - --login-url=$OIDC_AUTH_ENDPOINT
+        # - --redeem-url=$OIDC_TOKEN_ENDPOINT
+        # - --profile-url=$OIDC_PROFILE_URL
+        # - --oidc-issuer-url=$OIDC_ISSUER_URL
+        # - --oidc-jwks-url=$OIDC_JWKS_URI
         env:
         - name: OAUTH2_PROXY_CLIENT_ID
           valueFrom:
@@ -62,6 +62,31 @@ spec:
           valueFrom:
             secretKeyRef:
               key: OAUTH2_PROXY_COOKIE_SECRET
+              name: oauth2-proxy
+        - name: OAUTH2_PROXY_LOGIN_URL
+          valueFrom:
+            secretKeyRef:
+              key: OIDC_AUTH_ENDPOINT
+              name: oauth2-proxy
+        - name: OAUTH2_PROXY_REDEEM_URL
+          valueFrom:
+            secretKeyRef:
+              key: OIDC_TOKEN_ENDPOINT
+              name: oauth2-proxy
+        - name: OAUTH2_PROXY_PROFILE_URL
+          valueFrom:
+            secretKeyRef:
+              key: OIDC_PROFILE_URL
+              name: oauth2-proxy
+        - name: OAUTH2_PROXY_OIDC_ISSUER_URL
+          valueFrom:
+            secretKeyRef:
+              key: OIDC_ISSUER_URL
+              name: oauth2-proxy
+        - name: OAUTH2_PROXY_OIDC_JWKS_URL
+          valueFrom:
+            secretKeyRef:
+              key: OIDC_JWKS_URI
               name: oauth2-proxy
         image: quay.io/oauth2-proxy/oauth2-proxy:latest
         imagePullPolicy: IfNotPresent
